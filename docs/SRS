@@ -1,0 +1,76 @@
+Overview
+
+Note: This is all subject to change. I am still working out how to read (well... stream) 
+a direct message, reply, or mention and the best method to do so without breaking the 
+rules. This is just the first specs release so take everything with a grain of salt.
+
+We will be creating The Reminder Bot which is an automated reminder system for 
+Twitter. A reminder is submitted to the bot by Tweeting with the following syntax:
+	
+	@thereminderbot <time> : <message>
+		time - <hours and minute> : <AM/PM> : <timezone> : <month/day>
+		message - <string>
+	e.g.
+		@thereminderbot 845  : AM : AKDT : 08/26 : Wake up!
+		@thereminderbot 1200 : PM : EDT  : 12/24 : Eat lunch with Greg
+
+This syntax was chosen for easy parsing. <insert how to read Tweet>. Once we
+have the notification, it will be sent to the createTweet function. This function will
+check that all fields are present and abide by the syntax listed above. If it does, it
+will create a Tweet object that conatins hour, minute, period (AM/PM), timezone, month,
+day, and message fields. If there is any error, the bot will Tweet a syntax reminder (using 
+the sendTweet function described later) containing the following information:
+
+	@<user> your reminder was not saved. Please use the correct syntax described in
+	the Twitter bio. Thanks!
+
+Notice that we have an issue here that we will not solve during this project. The 
+Twitter API limits (https://support.twitter.com/articles/15364) the amount of Tweets 
+per day so if a user incorrectly Tweets a thousand times to @thereminderbot, we will 
+run out of daily Tweets due to one thousand syntax reminders sent. 
+
+If the createTweet function determines the Tweet contains the correct information
+and successfully creates the Tweet object, it will send the message field to the 
+filter function. This function will make sure the bot does not send any reminders 
+with a message field that incites  violence, contains provocative language or 
+profanities, or mentions any other Twitter user(s).
+
+If the syntax is correct and the filter function approves of the message, it will be
+sent to the timeCheck function. This function checks if the Tweet's time
+and date have passed. If so, it will Tweet a notification to them.
+
+If the time is correct and the filter function approves of the message, then the
+Tweet will be sent to the convertTimeZone function. This function will read the time zone
+and convert the hours and minutes to EDT. The conversion is necessary because our server
+will be in EDT. Once the hours and minutes are adjusted, it will be sent to the 
+insertToDatabase function. The database is where all of the Tweets will be saved.
+
+The PostgreSQL database will hold all of the reminder Tweets. It will check if a reminder
+needs to be sent on the minute. If a reminder is found, it will use the sendTweet function
+to Tweet the reminder.
+
+The journey of a successful Twitter Reminder submission:
+	<read from DMs/mentions/replys> -> createTweet -> filter -> timeCheck -> convertTimeZone -> insertToDatabase -> sendTweet
+	
+Tyler will be in charge of the database. This includes the insertToDatabase function.
+
+Brendan will be in charge of managing the BitBucket repo and making sure we meet
+deadlines. He will also research the best cloud platform to host our bot (it must
+be capable of hosting a PostgreSQL database on it).
+
+Lacey will be in charge of the timeCheck, convertTimeZone, and the sendTweet function.
+
+Barney will be in charge of the filter function. This is a very broad function that
+needs to check for a lot of keywords so good luck!
+
+This project will be written in Python 3.5 with the PEP 8 format (https://www.python.org/dev/peps/pep-0008/). Feel
+free to use any libraries that you find online. Also, each team member is responsible for testing their code. Please
+leave you white/black box tests in the test folder.
+
+Please do not change any account information so our entire group can run tests if needed.
+TheReminderBot
+username: thereminderbot
+password: thisisthepassword
+Gmail
+username: reminderbot001@gmail.com
+password: thisisthepassword
