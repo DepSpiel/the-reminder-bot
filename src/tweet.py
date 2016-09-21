@@ -7,10 +7,10 @@ completes.
 
 class Tweet:
 
-	def __init__(self, sender, hour, min, period, time_zone, month, day, msg):
+	def __init__(self, sender, hour, minute, period, time_zone, month, day, msg):
 		self.sender = sender			# the sender's Twitter handle
 		self.hour = hour 				# converted to EDT in convertTimeZone
-		self.min = min					# converted to EDT in convertTimeZone
+		self.min = minute					# converted to EDT in convertTimeZone
 		self.period = period 			# AM or PM
 		self.time_zone = time_zone		# will remain unchanged
 		self.month = month
