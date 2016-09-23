@@ -1,25 +1,30 @@
-Overview
-
-Note: This is all subject to change. I am still working out how to read (well... stream) 
-a direct message, reply, or mention and the best method to do so without breaking the 
-rules. This is just the first specs release so take everything with a grain of salt.
+  ____                       _
+ / __ \                     (_)
+| |  | |_   _____ _ ____   ___  _____      __
+| |  | \ \ / / _ \ '__\ \ / / |/ _ \ \ /\ / /
+| |__| |\ V /  __/ |   \ V /| |  __/\ V  V /
+ \____/  \_/ \___|_|    \_/ |_|\___| \_/\_/
 
 We will be creating The Reminder Bot which is an automated reminder system for 
-Twitter. A reminder is submitted to the bot by Tweeting with the following syntax:
+Twitter. A reminder is submitted to the bot by Direct Messaging @thereminderbot
+with the following syntax:
 	
-	@thereminderbot <time> : <message>
-		time - <hours and minute> : <AM/PM> : <timezone> : <month/day>
+	<time> : <message>
+		time - <hours and minute> : <AM/PM> : <month/day>
 		message - <string>
 	e.g.
-		@thereminderbot 845  : AM : AKDT : 08/26 : Wake up!
-		@thereminderbot 1200 : PM : EDT  : 12/24 : Eat lunch with Greg
+		845  : AM : 08/26 : Wake up!
+		1200 : PM : 12/24 : Eat lunch with Greg
 
-This syntax was chosen for easy parsing. <insert how to read Tweet>. Once we
-have the notification, it will be sent to the createTweet function. This function will
-check that all fields are present and abide by the syntax listed above. If it does, it
-will create a Tweet object that conatins hour, minute, period (AM/PM), timezone, month,
-day, and message fields. If there is any error, the bot will Tweet a syntax reminder (using 
-the sendTweet function described later) containing the following information:
+This syntax was chosen for easy parsing. The Direct Message (DM) feed will be streamed
+with the Twitter Python API found here: https://github.com/sixohsix/twitter/tree/master/twitter.
+The API will send a JSON object when a new DM is sent to the bot. Once we have the new JSON object,
+it will be sent to the create_tweet function. This function will parse the JSON object and extract
+all required information to make the Tweet object. The create_tweet function ensures all
+required fields are present. If they are, it will create a Tweet object that contains hour, minute,
+period (AM/PM), timezone, month, day, message, and following fields. If there is any error, the bot
+will Tweet a syntax reminder (using the send_tweet function described later) containing the following
+information:
 
 	@<user> your reminder was not saved. Please use the correct syntax described in
 	the Twitter bio. Thanks!
@@ -29,30 +34,41 @@ Twitter API limits (https://support.twitter.com/articles/15364) the amount of Tw
 per day so if a user incorrectly Tweets a thousand times to @thereminderbot, we will 
 run out of daily Tweets due to one thousand syntax reminders sent. 
 
-If the createTweet function determines the Tweet contains the correct information
+If the create_tweet function determines the Tweet contains the correct information
 and successfully creates the Tweet object, it will send the message field to the 
-filter function. This function will make sure the bot does not send any reminders 
+filter_tweet function. This function will make sure the bot does not send any reminders
 with a message field that incites  violence, contains provocative language or 
 profanities, or mentions any other Twitter user(s).
 
-If the syntax is correct and the filter function approves of the message, it will be
-sent to the timeCheck function. This function checks if the Tweet's time
+If the syntax is correct and the filter_tweet function approves of the message, it will be
+sent to the time_check function. This function checks if the Tweet's time
 and date have passed. If so, it will Tweet a notification to them.
 
-If the time is correct and the filter function approves of the message, then the
-Tweet will be sent to the convertTimeZone function. This function will read the time zone
+If the time is correct and the filter_tweet function approves of the message, then the
+Tweet will be sent to the convert_time_zone function. This function will read the time zone
 and convert the hours and minutes to EDT. The conversion is necessary because our server
 will be in EDT. Once the hours and minutes are adjusted, it will be sent to the 
-insertToDatabase function. The database is where all of the Tweets will be saved.
+insert_to_database function. The database is where all of the Tweets will be saved.
 
 The PostgreSQL database will hold all of the reminder Tweets. It will check if a reminder
 needs to be sent on the minute. If a reminder is found, it will use the sendTweet function
 to Tweet the reminder.
 
 The journey of a successful Twitter Reminder submission:
-	<read from DMs/mentions/replys> -> createTweet -> filter -> timeCheck -> convertTimeZone -> insertToDatabase -> sendTweet
-	
-Tyler will be in charge of the database. This includes the insertToDatabase function.
+	<steam DMs> -> create_tweet -> filter_tweet -> time_check -> convert_time_zone -> insert_to_database -> send_tweet
+
+Any errors in formatting/syntax will be sent to a function (name it something relevant) in
+the error file. All errors will Tweet what went wrong to the sender.
+ _____                                 _ _     _ _ _ _   _
+|  __ \                               (_) |   (_) (_) | (_)
+| |__) |___  ___ _ __   ___  _ __  ___ _| |__  _| |_| |_ _  ___  ___
+|  _  // _ \/ __| '_ \ / _ \| '_ \/ __| | '_ \| | | | __| |/ _ \/ __|
+| | \ \  __/\__ \ |_) | (_) | | | \__ \ | |_) | | | | |_| |  __/\__ \
+|_|  \_\___||___/ .__/ \___/|_| |_|___/_|_.__/|_|_|_|\__|_|\___||___/
+                | |
+                |_|
+Tyler will be in charge of the database and the create_tweet function. This includes
+the insertToDatabase function.
 
 Brendan will be in charge of managing the BitBucket repo and making sure we meet
 deadlines. He will also research the best cloud platform to host our bot (it must
@@ -60,13 +76,25 @@ be capable of hosting a PostgreSQL database on it).
 
 Lacey will be in charge of the timeCheck, convertTimeZone, and the sendTweet function.
 
-Barney will be in charge of the filter function. This is a very broad function that
+Barney will be in charge of the filter_tweet function. This is a very broad function that
 needs to check for a lot of keywords so good luck!
-
+  _____          _ _                _____ _                  _               _
+ / ____|        | (_)              / ____| |                | |             | |
+| |     ___   __| |_ _ __   __ _  | (___ | |_ __ _ _ __   __| | __ _ _ __ __| |___
+| |    / _ \ / _` | | '_ \ / _` |  \___ \| __/ _` | '_ \ / _` |/ _` | '__/ _` / __|
+| |___| (_) | (_| | | | | | (_| |  ____) | || (_| | | | | (_| | (_| | | | (_| \__ \
+ \_____\___/ \__,_|_|_| |_|\__, | |_____/ \__\__,_|_| |_|\__,_|\__,_|_|  \__,_|___/
+                            __/ |
+                           |___/
 This project will be written in Python 3.5 with the PEP 8 format (https://www.python.org/dev/peps/pep-0008/). Feel
 free to use any libraries that you find online. Also, each team member is responsible for testing their code. Please
-leave you white/black box tests in the test folder.
-
+leave you white/black box tests in the test folder. Testing is required!
+ __  __ _
+|  \/  (_)
+| \  / |_ ___  ___
+| |\/| | / __|/ __|
+| |  | | \__ \ (__
+|_|  |_|_|___/\___|
 Please do not change any account information so our entire group can run tests if needed.
 TheReminderBot
 username: thereminderbot
