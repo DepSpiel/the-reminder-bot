@@ -3,5 +3,7 @@
 <insert desc>
 """
 
-def filter(tweet_obj):
-	# insert code
+
+def filter_tweet(tweet_obj):
+    # insert code
+    return

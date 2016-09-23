@@ -3,5 +3,7 @@
 <insert desc>
 """
 
-insertToDatabase(tweet_obj):
-	# insert code
+
+def insert_to_database(tweet_obj):
+    # insert code
+    return

@@ -3,5 +3,7 @@
 <insert desc>
 """
 
-def sendTweet(tweet_obj):
-	# insert code
+
+def send_tweet(tweet_obj):
+    #insert code
+    return
