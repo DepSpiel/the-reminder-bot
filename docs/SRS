@@ -10,11 +10,11 @@ Twitter. A reminder is submitted to the bot by Direct Messaging @thereminderbot
 with the following syntax:
 	
 	<time> : <message>
-		time - <hours and minute> : <AM/PM> : <month/day>
+		time - <hour> : <minute> : <AM/PM> : <month/day>
 		message - <string>
 	e.g.
-		845  : AM : 08/26 : Wake up!
-		1200 : PM : 12/24 : Eat lunch with Greg
+		8:45  : AM : 08/26 : Wake up!
+		12:00 : PM : 12/24 : Eat lunch with Greg
 
 This syntax was chosen for easy parsing. The Direct Message (DM) feed will be streamed
 with the Twitter Python API found here: https://github.com/sixohsix/twitter/tree/master/twitter.

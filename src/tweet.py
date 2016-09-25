@@ -6,6 +6,8 @@ required fields to make a Tweet object. The Tweet object is created and
 passed to every function after create_tweet completes.
 """
 
+from src.error import CreateTweetError
+
 
 class Tweet:
 
@@ -20,10 +22,45 @@ class Tweet:
         self.msg = msg 					# will be checked with filter function
         self.following = following		# boolean value determining if user is a follower
 
-    def __str__(self):
-        return self.sender + ' ' + self.msg
+    def __repr__(self):
+        return self.sender + ' ' + self.hour + ' ' + self.minute + ' ' + self.period + ' ' +\
+               self.time_zone + ' ' + self.month + ' ' + self.day + ' ' + self.msg
 
 
 def create_tweet(json_obj):
-    # insert code
-    return
+
+    # get the text field of the DM and split the string with ':'
+    dm_msg = json_obj['direct_message']['text']
+    split_dm_msg = dm_msg.split(':', 4)
+    if len(split_dm_msg) != 5:
+        raise CreateTweetError('split_dm_msg is not size of 5')
+
+    # set variables from the split text field of the DM
+    hour = split_dm_msg[0].replace(" ", "")
+    minute = split_dm_msg[1].replace(" ", "")
+    period = split_dm_msg[2].replace(" ", "")
+    month = split_dm_msg[3].replace(" ", "").split('/')[0].replace(" ", "")
+    day = split_dm_msg[3].replace(" ", "").split('/')[1].replace(" ", "")
+    msg = split_dm_msg[4].replace(" ", "")
+
+    # get the Twitter handle of the sender
+    sender = json_obj['direct_message']['sender_screen_name']
+    if sender is None:
+        raise CreateTweetError('Sender had a value of None')
+        return None
+
+    # get the sender's time zone
+    time_zone = json_obj['direct_message']['sender']['time_zone']
+    if time_zone is None:
+        raise CreateTweetError('Time zone had a value of None')
+        return None
+
+    # check to see if sender is following @thereminderbot
+    following = json_obj['direct_message']['recipient']['following'] # might be sender...
+    if following is None: # or is false (add later)
+        raise CreateTweetError('The sender is not following or had a value of None')
+        return None
+
+    # create the Tweet object and return
+    tweet_obj = Tweet(sender, hour, minute, period, time_zone, month, day, msg, following)
+    return tweet_obj

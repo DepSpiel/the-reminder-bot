@@ -10,6 +10,8 @@ OAuth Tokens: https://apps.twitter.com/
 API: https://github.com/sixohsix/twitter/tree/master/twitter
 """
 
+from src.tweet import create_tweet
+
 # when repo is made public, the keys and tokens will be replaced with placeholders
 auth = OAuth(
     consumer_key='S0F7lEqtL8vMwaZXhMYKnRCoQ',
@@ -24,6 +26,10 @@ twitter_userstream = TwitterStream(auth=auth, domain='userstream.twitter.com')
 
 for msg in twitter_userstream.user():
     if 'direct_message' in msg:
-        create_tweet(msg)
+        tweet_obj = create_tweet(msg)
+        if tweet_obj is None:
+            continue
+        else:
+            print(tweet_obj)
     else:
         print('No new messages...')

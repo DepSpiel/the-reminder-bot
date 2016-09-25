@@ -1,0 +1,2 @@
+class CreateTweetError(Exception):
+    pass
