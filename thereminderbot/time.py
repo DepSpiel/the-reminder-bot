@@ -10,7 +10,7 @@ their local time to EDT.>
 
 import time
 from datetime import datetime, timedelta
-from src.error import CreateTweetError
+from thereminderbot.error import CreateTweetError
 
 #dict of timezones supported by twitter keys are GMT/UTC offset
 tzsontwitter={-11:["International Date Line West", "Midway Island",

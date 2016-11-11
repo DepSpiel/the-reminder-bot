@@ -6,7 +6,7 @@ required fields to make a Tweet object. The Tweet object is created and
 passed to every function after create_tweet completes.
 """
 
-from src.error import CreateTweetError
+from thereminderbot.error import CreateTweetError
 
 
 class Tweet:

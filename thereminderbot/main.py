@@ -1,5 +1,3 @@
-from twitter import *
-
 """
 @author Tyler Lambert
 This file sets up the OAuth tokens to allow automated access to TheReminderBot's
@@ -10,14 +8,17 @@ OAuth Tokens: https://apps.twitter.com/
 API: https://github.com/sixohsix/twitter/tree/master/twitter
 """
 
-from src.tweet import create_tweet
+
+from thereminderbot.twitter import TwitterStream, Twitter, OAuth
+from thereminderbot.tweet import create_tweet
+
 
 # when repo is made public, the keys and tokens will be replaced with placeholders
 auth = OAuth(
-    consumer_key='S0F7lEqtL8vMwaZXhMYKnRCoQ',
-    consumer_secret='8WE3PHwcNhSM46Gt0MF5Et1asckLyr6rGhE8yj30e3boJTTCln',
-    token='774409787559862272-095bXtGJmQT1tnsOkww88dXPEaIrEwR',
-    token_secret='1rwvvZtNnvlcQgkv34q3c7XVPjtvv28IpIlvUS8hAx9XE'
+    consumer_key='2CE1E6U7odFK1MFWeCnOPIh5R',
+    consumer_secret='SqqWIvcMGdLbwAqu2oSBzsCr4379aSITLy4AsA9HZyPQxYqCl6',
+    token='796842527487889409-hY298XB4dZGxBLU2blhpCVMz14UPQo8',
+    token_secret='E9CmwGNpDNffxzU7NjuXernjofYSEF6RyjEKiVantXJap'
 )
 
 t = Twitter(auth=auth)
@@ -30,6 +31,7 @@ for msg in twitter_userstream.user():
         if tweet_obj is None:
             continue
         else:
+            # t.statuses.update(status='@' + tweet_obj.sender + " " + tweet_obj.msg)
             print(tweet_obj)
     else:
         print('No new messages...')
