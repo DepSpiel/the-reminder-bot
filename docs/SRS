@@ -72,7 +72,7 @@ the insertToDatabase function.
 
 Brendan will be in charge of managing the BitBucket repo and making sure we meet
 deadlines. He will also research the best cloud platform to host our bot (it must
-be capable of hosting a PostgreSQL database on it).
+be capable of hosting a PostgreSQL database on it). Brendan also authored the filter_tweet function.
 
 Lacey will be in charge of the timeCheck, convertTimeZone, and the sendTweet function.
 
