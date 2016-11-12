@@ -16,14 +16,14 @@ def filter_tweet(tweet_obj):
     string_to_test = tweet_obj.msg    #This allows the object's message to be stored in a variable for easy access.
     string_to_test = string_to_test.casefold()    #converts the string to all lowercase characters for matching.
     string_to_test = string_to_test.strip(' ')    #strips all whitespace between letters of words (i.e., 'f u c k' would be stripped to 'fuck')
-    forbidden_Words = ['fuck', 'shit', 'piss', 'cunt', 'damn', 'hell', 'dick', 'bomb', 'shoot', 'kill', 'rape', 'assault', 'murder', 'pussy', 
+    forbidden_words = ['fuck', 'shit', 'piss', 'cunt', 'damn', 'hell', 'dick', 'bomb', 'shoot', 'kill', 'rape', 'assault', 'murder', 'pussy', 
                         'kike', 'bitch', 'cock', 'cocksucker', 'tits', 'ass', 'nigger', 'nigga', 'bastard', 'beaner', 'spick', 'blowjob', 'clit', 'chink', 'chinc', 'coon', 'cooch', 'cum', 
                         'dildo', 'dike', 'douche', 'fag', 'hoe', 'honkey', 'muff', 'queer', 'rimjob', 'slut', 'whore']    #This is the list that will be the basis for comparison against the tweeted message.
     for i in forbidden_words:    #Iterate through the list, testing each word for presence within the tweet. If a match is found, raise an exception. Else, return.
-        if i in string_to_test: #if the message contains a forbidden word:
+        if i in string_to_test:    #if the message contains a forbidden word:
             raise FilterError('This tweet contains incendiery language or profanity')
         else
-            return #Nothing is found, so return
-    return #Exit
+            return     #Nothing is found, so return
+    return    #Exit
     
     #References: http://www.noswearing.com/, and the Python 3.5.2 Documentation
