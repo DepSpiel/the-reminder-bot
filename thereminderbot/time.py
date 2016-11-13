@@ -20,7 +20,7 @@ tzsontwitter={-11:["International Date Line West", "Midway Island",
                   -7:["Pacific Time (US & Canada)", "Tijuana", "Arizona"],
                   -6:["Mountain Time (US & Canada)", "Chihuahua", "Mazatlan",
                       "Saskatchewan", "Central America"],
-                  -5:["Central Time (US & Canada", "Guadalajara", "Mexico City"
+                  -5:["Central Time (US & Canada)", "Guadalajara", "Mexico City"
                       ,"Monterrey", "Bogota", "Lima", "Quito"],
                   -4:["Eastern Time (US & Canada)", "Indiana (East)", "Caracas"
                        , "La Paz", "Georgetown"],
@@ -69,7 +69,8 @@ timeutc= datetime.utcnow()
 #converts the time to EDT for ease of comparison then compares the timedelta
 #of the current time against the time requested by the user. ValueError is
 #raise if day is out of range for month or month not in range 1-12. If user
-#tries to enter an hour >12 or <0 a ValueError is thrown as well.
+#tries to enter an hour >12 or <0 a ValueError is thrown as well. If period
+#is set to AM and user enters hour>12 CreateTweetError is raised
 def time_check(tweet_obj):
     #offset required due to DST
     current_time=datetime(timeutc.year, timeutc.month, timeutc.day,
@@ -79,14 +80,21 @@ def time_check(tweet_obj):
     #convert to EDT for comparison
     convert_time_zone(tweet_obj)
     userhr=tweet_obj.hour
+    userperiod=tweet_obj.period
+    
+    #check for AM period with hour in PM range
+    if userperiod=="AM":
+        if userhr>12:
+            raise CreateTweetError("Hour field can only be 0-12.")
+    
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
             userhr=12+userhr
-    
-    """print (today)       
-    print(time.strftime("%d/%m/%Y"))
-    print("reported by utcnow=%d"%(timeutc.hour))"""        
+    if tweet_obj.period=="AM":
+        if userhr==12:
+            userhr=0
+      
     userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day,
                  userhr, tweet_obj.minute, 0)
 
@@ -94,16 +102,9 @@ def time_check(tweet_obj):
                   minutes=current_time.minute)
     requested=timedelta(days=tweet_obj.day, hours=userhr,
                         minutes=tweet_obj.minute)
-
-    """print("Now is year %d, month %d, day %d, hour %d, minute %d\n"
-          %(timeutc.year, timeutc.month, current_time.day, current_time.hour,
-            current_time.minute))
-    print("Requested is year %d, month %d, day %d, hour %d, minute %d\n"
-          %(userdatetime.year, userdatetime.month, userdatetime.day,
-            userdatetime.hour, userdatetime.minute))"""
   
     #test if they requested a previous month
-    if userdate.month<current_time.month:
+    if userdatetime.month<current_time.month:
         raise CreateTweetError("Time requested has passed")
 
     #timedelta check for days,hours,minutes
@@ -120,20 +121,28 @@ def convert_time_zone(tweet_obj):
     edt_offset = -4
     usertz=tweet_obj.time_zone
     userhr=tweet_obj.hour
+    userperiod=tweet_obj.period
+    
+    #check for AM period with hour in PM range
+    if userperiod=="AM":
+        if userhr>12:
+            raise CreateTweetError("Hour field can only be 0-12.")
     
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
             userhr=12+userhr
+    if tweet_obj.period=="AM":
+        if userhr==12:
+            userhr=0
     
     userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day, userhr,
                  tweet_obj.minute, 0)
-    """print("year=%d, month=%d, day=%d, hour=%d, minute=%d"%(userdatetime.year
-          , userdatetime.month, userdatetime.day, userdatetime.hour,
-            userdatetime.minute))"""
+
 
     #check for user time zone and convert as needed.
-    if usertz=="Eastern Time (US & Canada)" or usertz=="Indiana (East)":
+    if usertz=="Eastern Time (US & Canada)" or usertz=="Indiana (East)" or \
+        usertz=="Caracas" or usertz=="La Paz" or usertz=="Georgetown":
         return None
     else:
         for keys,vals in tzsontwitter.items():
@@ -149,12 +158,7 @@ def convert_time_zone(tweet_obj):
                         
                     userdatetime+tempmin
                     temphr=timedelta(hours=keys-edt_offset)
-
                     userdatetime-=temphr
-
-                    """print("year=%d, month=%d, day=%d, hour=%d, minute=%d"%(userdatetime.year,
-                            userdatetime.month, userdatetime.day, userdatetime.hour,
-                            userdatetime.minute))"""
                     break
                 
         #convert time back to 12 hr format        
