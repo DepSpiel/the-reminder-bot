@@ -11,6 +11,7 @@ API: https://github.com/sixohsix/twitter/tree/master/twitter
 
 from thereminderbot.twitter import TwitterStream, Twitter, OAuth
 from thereminderbot.tweet import create_tweet
+from thereminderbot.verifytime import convert_time_zone, time_check
 
 
 # when repo is made public, the keys and tokens will be replaced with placeholders
@@ -31,7 +32,10 @@ for msg in twitter_userstream.user():
         if tweet_obj is None:
             continue
         else:
-            # t.statuses.update(status='@' + tweet_obj.sender + " " + tweet_obj.msg)
+            filter(tweet_obj)
+            convert_time_zone(tweet_obj)
+            time_check(tweet_obj)
+
             print(tweet_obj)
     else:
         print('No new messages...')

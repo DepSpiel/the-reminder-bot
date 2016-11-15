@@ -5,7 +5,7 @@
 
 import unittest
 from thereminderbot.error import CreateTweetError
-from thereminderbot.time import convert_time_zone, time_check
+from thereminderbot.verifytime import convert_time_zone, time_check
 from thereminderbot.tweet import Tweet
 
 class TimeTest(unittest.TestCase):
