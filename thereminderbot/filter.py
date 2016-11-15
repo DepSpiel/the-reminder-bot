@@ -4,6 +4,7 @@ This is the filter function for TRB - ensuring that tweets don't contain profani
 Trigger Warning: This file contains a list, forbidden_Words, of common profanity. If you are easily offended, do not view this list.
 """
 
+from thereminderbot.error import FilterError
 
 def filter_tweet(tweet_obj):
     #Procedure:
