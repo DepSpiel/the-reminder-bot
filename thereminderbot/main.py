@@ -12,6 +12,7 @@ API: https://github.com/sixohsix/twitter/tree/master/twitter
 from thereminderbot.twitter import TwitterStream, Twitter, OAuth
 from thereminderbot.tweet import create_tweet
 from thereminderbot.verifytime import convert_time_zone, time_check
+from thereminderbot.database import insert_to_database
 
 
 # when repo is made public, the keys and tokens will be replaced with placeholders
@@ -35,7 +36,5 @@ for msg in twitter_userstream.user():
             filter(tweet_obj)
             convert_time_zone(tweet_obj)
             time_check(tweet_obj)
-
+            insert_to_database(tweet_obj)
             print(tweet_obj)
-    else:
-        print('No new messages...')

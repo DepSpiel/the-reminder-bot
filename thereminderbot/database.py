@@ -14,10 +14,10 @@ To config the database:
     -> following bit NOT NULL);
 """
 
-import mysql.connector
+import pymysql
 
-cnx = mysql.connector.connect(host='127.0.0.1', database='test')
-cursor = cnx.cursor()
+conn = pymysql.connect(host='localhost', user='root', passwd='thisisthepassword', db='thereminderbot')
+cursor = conn.cursor()
 
 
 def insert_to_database(tweet_obj):
@@ -28,5 +28,4 @@ def insert_to_database(tweet_obj):
                     tweet_obj.timezone, tweet_obj.month, tweet_obj.day, tweet_obj.message,
                     tweet_obj.following)
     cursor.execute(reminder_str)
-    cnx.commit()
     return
