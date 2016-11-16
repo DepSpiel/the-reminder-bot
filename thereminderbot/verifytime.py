@@ -8,9 +8,8 @@ their local time to EDT.>
 #note wait for Nov. 6th to make sure DST change doesn't mess this up change
 #occurs at 2:00AM
 
-import time
 from datetime import datetime, timedelta
-from thereminderbot.error import CreateTweetError
+from error import CreateTweetError
 
 #dict of timezones supported by twitter keys are GMT/UTC offset
 tzsontwitter={-11:["International Date Line West", "Midway Island",
@@ -90,18 +89,18 @@ def time_check(tweet_obj):
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
-            userhr=12+userhr
+            userhr=12+int(userhr)
     if tweet_obj.period=="AM":
         if userhr==12:
             userhr=0
       
-    userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day,
-                 userhr, tweet_obj.minute, 0)
+    userdatetime=datetime(int(timeutc.year), int(tweet_obj.month), int(tweet_obj.day),
+                 int(userhr), int(tweet_obj.minute), 0)
 
     now=timedelta(days=current_time.day, hours=current_time.hour,
                   minutes=current_time.minute)
-    requested=timedelta(days=tweet_obj.day, hours=userhr,
-                        minutes=tweet_obj.minute)
+    requested=timedelta(days=int(tweet_obj.day), hours=int(userhr),
+                        minutes=int(tweet_obj.minute))
   
     #test if they requested a previous month
     if userdatetime.month<current_time.month:
@@ -131,13 +130,13 @@ def convert_time_zone(tweet_obj):
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
-            userhr=12+userhr
+            userhr=12+int(userhr)
     if tweet_obj.period=="AM":
         if userhr==12:
             userhr=0
     
-    userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day, userhr,
-                 tweet_obj.minute, 0)
+    userdatetime=datetime(int(timeutc.year), int(tweet_obj.month), int(tweet_obj.day), int(userhr),
+                 int(tweet_obj.minute), 0)
 
 
     #check for user time zone and convert as needed.
