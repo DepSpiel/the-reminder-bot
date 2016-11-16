@@ -6,7 +6,7 @@ required fields to make a Tweet object. The Tweet object is created and
 passed to every function after create_tweet completes.
 """
 
-from thereminderbot.error import CreateTweetError
+from error import CreateTweetError
 
 
 class Tweet:
@@ -41,7 +41,7 @@ def create_tweet(json_obj):
     period = split_dm_msg[2].replace(" ", "")
     month = split_dm_msg[3].replace(" ", "").split('/')[0].replace(" ", "")
     day = split_dm_msg[3].replace(" ", "").split('/')[1].replace(" ", "")
-    msg = split_dm_msg[4].replace(" ", "")
+    msg = split_dm_msg[4]#.replace(" ", "")
 
     # get the Twitter handle of the sender
     sender = json_obj['direct_message']['sender_screen_name']
