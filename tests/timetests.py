@@ -4,9 +4,11 @@
 """
 
 import unittest
-from thereminderbot.error import CreateTweetError
-from thereminderbot.verifytime import convert_time_zone, time_check
-from thereminderbot.tweet import Tweet
+import sys
+sys.path.insert(0, '/home/ubuntu/thereminderbot/thereminderbot')
+from error import CreateTweetError
+from verifytime import convert_time_zone, time_check
+from tweet import Tweet
 
 class TimeTest(unittest.TestCase):
 	
