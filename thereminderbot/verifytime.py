@@ -64,12 +64,18 @@ tzsontwitter={-11:["International Date Line West", "Midway Island",
 #EDT current time parameters
 timeutc= datetime.utcnow()
 
-#check that the requested time has not already passed. This function first
-#converts the time to EDT for ease of comparison then compares the timedelta
-#of the current time against the time requested by the user. ValueError is
-#raise if day is out of range for month or month not in range 1-12. If user
-#tries to enter an hour >12 or <0 a ValueError is thrown as well. If period
-#is set to AM and user enters hour>12 CreateTweetError is raised
+#represent date that time will move forward and fall back in USA
+#needs to be changed annually 
+dstoff=datetime(timeutc.year, 11, 6, 2,
+                 0, 0)
+dston=datetime(timeutc.year, 3, 13, 2,
+                 0, 0)
+"""check that the requested time has not already passed. This function first
+converts the time to EDT for ease of comparison then compares the timedelta
+of the current time against the time requested by the user. ValueError is
+raised if day, month or hour are out of range.index If period is set to AM and
+user enters hour>12 CreateTweetError is raised. If time has passed already
+this function returns False, otherwise True is returned."""
 def time_check(tweet_obj):
     #offset required due to DST
     current_time=datetime(timeutc.year, timeutc.month, timeutc.day,
@@ -89,33 +95,33 @@ def time_check(tweet_obj):
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
-            userhr=12+int(userhr)
+            userhr=12+userhr
     if tweet_obj.period=="AM":
         if userhr==12:
             userhr=0
       
-    userdatetime=datetime(int(timeutc.year), int(tweet_obj.month), int(tweet_obj.day),
-                 int(userhr), int(tweet_obj.minute), 0)
+    userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day,
+                 userhr, tweet_obj.minute, 0)
 
     now=timedelta(days=current_time.day, hours=current_time.hour,
                   minutes=current_time.minute)
-    requested=timedelta(days=int(tweet_obj.day), hours=int(userhr),
-                        minutes=int(tweet_obj.minute))
+    requested=timedelta(days=tweet_obj.day, hours=userhr,
+                        minutes=tweet_obj.minute)
   
     #test if they requested a previous month
     if userdatetime.month<current_time.month:
-        raise CreateTweetError("Time requested has passed")
+        return False
 
     #timedelta check for days,hours,minutes
     if requested<now:
-        raise CreateTweetError("Time requested has passed")
+        return False
 
-    return None
+    return True
 
 	
-#makes use of datetime object to store users requested time, in a 24 hr/day
-#format and calculates the difference in their time zone an EDT using a
-#timedelta object to handle difference in hours and rollover of day/month/year
+"""makes use of datetime object to store users requested time, in a 24 hr/day
+format and calculates the difference in their time zone an EDT using a
+timedelta object to handle difference in hours and rollover of day/month/year"""
 def convert_time_zone(tweet_obj):
     edt_offset = -4
     usertz=tweet_obj.time_zone
@@ -130,14 +136,13 @@ def convert_time_zone(tweet_obj):
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
-            userhr=12+int(userhr)
+            userhr=12+userhr
     if tweet_obj.period=="AM":
         if userhr==12:
             userhr=0
     
-    userdatetime=datetime(int(timeutc.year), int(tweet_obj.month), int(tweet_obj.day), int(userhr),
-                 int(tweet_obj.minute), 0)
-
+    userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day, userhr,
+                 tweet_obj.minute, 0)
 
     #check for user time zone and convert as needed.
     if usertz=="Eastern Time (US & Canada)" or usertz=="Indiana (East)" or \
@@ -148,24 +153,37 @@ def convert_time_zone(tweet_obj):
             for x in vals:
                 if x==usertz:
                     tempmin=timedelta(minutes=0)
-                    #check for 1/2 and 3/4 timezones
+                    #check for 1/2 and 3/4 timezones and update minutes
                     if keys%1==.5:
                         tempmin=timedelta(minutes=30)
                         
                     if keys%1==.75:
                         tempmin=timedelta(minutes=45)
-                        
+
                     userdatetime+tempmin
                     temphr=timedelta(hours=keys-edt_offset)
-                    userdatetime-=temphr
+                    
+                    #check for user requested time happening before
+                    #or after dst is off. Adjust based on Timezone
+                    #and DST observance.
+                    if userdatetime<dstoff:
+                        if usertz=="Mountain Time (US & Canada)":
+                            temphr=timedelta(hours=keys-edt_offset-1)
+                    if userdatetime>dstoff:
+                        if usertz=="Azores" or usertz=="Monrovia" or usertz=="UTC":
+                             temphr=timedelta(hours=keys-edt_offset+1)
+
+                    userdatetime-=temphr             
                     break
-                
+				
         #convert time back to 12 hr format        
-        convert= userdatetime.hour
+        convert=userdatetime.hour
         if userdatetime.hour>=12:
             convert=userdatetime.hour-12
             tweet_obj.period="PM"
         else:
+            if convert==0:
+                convert=12
             tweet_obj.period="AM"
 
         #convert the tweet_obj fields    
@@ -174,4 +192,4 @@ def convert_time_zone(tweet_obj):
         tweet_obj.hour=convert
         tweet_obj.minute=userdatetime.minute        
 
-    return None			
+    return None	
