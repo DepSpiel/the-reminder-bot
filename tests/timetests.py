@@ -73,9 +73,10 @@ class TimeTest(unittest.TestCase):
 	def test_ctz10(self):
 		tz=Tweet("@bob", 12, 32, "AM", "Mountain Time (US & Canada)", 7, 25, "Hi", "none")
 		inEST=convert_time_zone(tz)
-		self.assertEqual(tz.hour,3)
+		self.assertEqual(tz.hour,2)
 		self.assertEqual(tz.period,"AM")
-	
+		
+	#check Arizona is handled correctly with DST off and on they don't observe DST. 
 	def test_ctz11(self):  # This test should pass, and is meant to establish a baseline.
 		tweet_1 = Tweet("@bob", 12, 00, "PM", "Arizona", 10, 15, "This should pass", "n/a")
 		inEST = convert_time_zone(tweet_1)
