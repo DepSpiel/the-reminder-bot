@@ -30,11 +30,11 @@ class TimeTest2(unittest.TestCase):
         self.assertEqual(tweet_2.hour, 9)
     
     #test DST is off and time difference is correect
-	def test_time2A(self):  # This test should raise a FilterError.
-		tweet_2 = Tweet("@trapkingwillie", 1, 12, "PM", "UTC", 11, 15, "Hope this works", "n/a")
-		eastern_std_time = convert_time_zone(tweet_2)
-		self.assertEqual(tweet_2.period, "AM")
-		self.assertEqual(tweet_2.hour, 8)
+    def test_time2A(self):  # This test should raise a FilterError.
+        tweet_2 = Tweet("@trapkingwillie", 1, 12, "PM", "UTC", 11, 15, "Hope this works", "n/a")
+        eastern_std_time = convert_time_zone(tweet_2)
+        self.assertEqual(tweet_2.period, "AM")
+        self.assertEqual(tweet_2.hour, 8)
 
     def test_time3(self):  # This test should raise a FilterError.
         tweet_3 = Tweet("@trapkingwillie", 1, 00, "PM", "Darwin", 10, 15, "Why is Brendan coding?", "n/a")
