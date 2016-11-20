@@ -75,6 +75,18 @@ class TimeTest(unittest.TestCase):
 		inEST=convert_time_zone(tz)
 		self.assertEqual(tz.hour,3)
 		self.assertEqual(tz.period,"AM")
+	
+	def test_ctz11(self):  # This test should pass, and is meant to establish a baseline.
+		tweet_1 = Tweet("@bob", 12, 00, "PM", "Arizona", 10, 15, "This should pass", "n/a")
+		inEST = convert_time_zone(tweet_1)
+		self.assertEqual(tweet_1.period, "PM")
+		self.assertEqual(tweet_1.hour, 3)
+
+	def test_ctz12(self):  # This test should pass, and is meant to establish a baseline.
+		tweet_1 = Tweet("@bob", 12, 00, "PM", "Arizona", 11, 15, "This should pass", "n/a")
+		inEST = convert_time_zone(tweet_1)
+		self.assertEqual(tweet_1.period, "PM")
+		self.assertEqual(tweet_1.hour, 2)
 
 	def test_ctz11(self):
 		tz=Tweet("@bob", 10, 32, "PM", "Mountain Time (US & Canada)", 11, 25, "Hi", "none")
