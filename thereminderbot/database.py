@@ -52,10 +52,11 @@ while (1<2):
         print("HOUR:"+str(HOUR)+", MIN: "+str(MINUTE)+", MONTH:"+str(MONTH)+", DAY: "+str(DAY)+", "+str(current_time))
         if MONTH == timeEST.month and DAY == current_time.day and HOUR == current_time.hour and MINUTE == timeEST.minute:
             print("SENDER: {0}, HOUR: {1}, MINUTE: {2}, PERIOD: {3}, TIME_ZONE: {4}, MONTH: {5}, DAY: {6}, MSG: {7}, FOLLOWING: {8}".format(SENDER, HOUR, MINUTE, PERIOD, TIME_ZONE, MONTH, DAY, MSG, FOLLOWING))
-            #use twitter connection to
+            #use twitter connection to send reminder
             t.statuses.update(status=str(tweet_string))
-            delstatmt = "DELETE FROM `maillist_subscription` WHERE id = ?"
-            cursor.execute(delstatmt, (SENDER,))
+            #remove all reminders by user after successful expiration of most recent reminder
+            cursor.execute("DELETE FROM reminders WHERE sender = '"+SENDER+"'")
+            #commiting changes to db is absolutely essential
             conn.commit()
             time.sleep(2.0) #wait two seconds so we don't send out a million tweets at once
             continue
