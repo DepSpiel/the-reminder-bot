@@ -136,13 +136,13 @@ def convert_time_zone(tweet_obj):
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
-            userhr=12+userhr
+            userhr=int(12+int(userhr))
     if tweet_obj.period=="AM":
         if userhr==12:
             userhr=0
     
-    userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day, userhr,
-                 tweet_obj.minute, 0)
+    userdatetime=datetime(timeutc.year, int(tweet_obj.month), int(tweet_obj.day), int(userhr),
+                 int(tweet_obj.minute), 0)
 
     #check for user time zone and convert as needed.
     if usertz=="Eastern Time (US & Canada)" or usertz=="Indiana (East)" or \

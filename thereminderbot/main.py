@@ -8,11 +8,10 @@ OAuth Tokens: https://apps.twitter.com/
 API: https://github.com/sixohsix/twitter/tree/master/twitter
 """
 
-
+import pymysql
 from twitter import TwitterStream, Twitter, OAuth
 from tweet import create_tweet
-from verifytime import convert_time_zone, time_check
-from database import insert_to_database
+from verifytime import convert_time_zone#, time_check
 from filter import filter_tweet
 
 
@@ -34,6 +33,23 @@ t = Twitter(auth=auth)
 
 twitter_userstream = TwitterStream(auth=auth, domain='userstream.twitter.com')
 
+
+def insert_to_database(tweet_obj):
+    conn = pymysql.connect(host='localhost', user='root', passwd='thisisthepassword', db='thereminderbot')
+    cursor = conn.cursor()
+    reminder_str = "INSERT INTO reminders (SENDER, HOUR, MINUTE, PERIOD, " \
+                   "TIME_ZONE, MONTH, DAY, MSG, FOLLOWING) VALUES ('{0}', {1}," \
+                   " {2}, '{3}', '{4}', {5}, {6}, '{7}', {8});".format(tweet_obj.sender,
+                                                                       tweet_obj.hour, tweet_obj.minute, tweet_obj.period,
+                                                                       tweet_obj.time_zone, tweet_obj.month, tweet_obj.day, tweet_obj.msg,
+                                                                       tweet_obj.following)
+    cursor.execute(reminder_str)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return
+
+
 for msg in twitter_userstream.user():
     if 'direct_message' in msg:
         tweet_obj = create_tweet(msg)
@@ -42,7 +58,7 @@ for msg in twitter_userstream.user():
         else:
             filter_tweet(tweet_obj) # successfully calls error
             convert_time_zone(tweet_obj) # successfully calls some of the errors
-            #time_check(tweet_obj) # is not quite working right now
+            #if time_check(tweet_obj):
             insert_to_database(tweet_obj)
             print(tweet_obj)
     else:

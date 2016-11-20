@@ -18,22 +18,7 @@ import pymysql
 from twitter import Twitter, OAuth
 from datetime import *
 import time
-
-
-def insert_to_database(tweet_obj):
-    conn = pymysql.connect(host='localhost', user='root', passwd='thisisthepassword', db='thereminderbot')
-    cursor = conn.cursor()
-    reminder_str = "INSERT INTO reminders (SENDER, HOUR, MINUTE, PERIOD, " \
-                   "TIME_ZONE, MONTH, DAY, MSG, FOLLOWING) VALUES ('{0}', {1}," \
-                   " {2}, '{3}', '{4}', {5}, {6}, '{7}', {8});".format(tweet_obj.sender,
-                    tweet_obj.hour, tweet_obj.minute, tweet_obj.period,
-                    tweet_obj.time_zone, tweet_obj.month, tweet_obj.day, tweet_obj.msg,
-                    tweet_obj.following)
-    cursor.execute(reminder_str)
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return
+from tweet import Tweet
 
 auth = OAuth(  # keys for reminderbot002@gmail.com , secondary test account with same login
     consumer_key='PfV0xdYWs55kstAO4PHF1kIHt',
@@ -58,13 +43,20 @@ while (1<2):
     for (SENDER, HOUR, MINUTE, PERIOD, TIME_ZONE, MONTH, DAY, MSG, FOLLOWING) in cursor:
 
         tweet_string = "Hey @" + SENDER + ", " + MSG
-        timeutc = datetime.utcnow()
-        current_time = datetime(timeutc.year, timeutc.month, timeutc.day-1, timeutc.hour+7, timeutc.minute, 0)
-        #print(current_time)
-        #print("HOUR:"+str(HOUR)+", MIN: "+str(MINUTE)+", MONTH:"+str(MONTH)+", DAY: "+str(DAY))
-        if MONTH == timeutc.month and DAY == current_time.day and HOUR == current_time.hour and MINUTE == timeutc.minute:
+        timeEST = datetime.now()
+        militarytimefix = 0
+        if(PERIOD == "PM"):
+            militarytimefix = 12
+        current_time = datetime(timeEST.year, timeEST.month, timeEST.day, timeEST.hour-militarytimefix, timeEST.minute, 0)
+        #current_time = Tweet(SENDER, HOUR, MINUTE, PERIOD, "Eastern Time (US & Canada)", 10, 15, "Hi", "none")
+        print("HOUR:"+str(HOUR)+", MIN: "+str(MINUTE)+", MONTH:"+str(MONTH)+", DAY: "+str(DAY)+", "+str(current_time))
+        if MONTH == timeEST.month and DAY == current_time.day and HOUR == current_time.hour and MINUTE == timeEST.minute:
             print("SENDER: {0}, HOUR: {1}, MINUTE: {2}, PERIOD: {3}, TIME_ZONE: {4}, MONTH: {5}, DAY: {6}, MSG: {7}, FOLLOWING: {8}".format(SENDER, HOUR, MINUTE, PERIOD, TIME_ZONE, MONTH, DAY, MSG, FOLLOWING))
+            #use twitter connection to
             t.statuses.update(status=str(tweet_string))
+            delstatmt = "DELETE FROM `maillist_subscription` WHERE id = ?"
+            cursor.execute(delstatmt, (SENDER,))
+            conn.commit()
             time.sleep(2.0) #wait two seconds so we don't send out a million tweets at once
             continue
 
