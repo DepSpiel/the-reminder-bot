@@ -175,6 +175,9 @@ def convert_time_zone(tweet_obj):
 
                     userdatetime-=temphr             
                     break
+        #if hour was not modified after loop throw error as timezone was not listed.
+        if userdatetime.hour==tweet_obj.hour:
+                    raise CreateTweetError("Your Timezone was not listed in the database")
 				
         #convert time back to 12 hr format        
         convert=userdatetime.hour
