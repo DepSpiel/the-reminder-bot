@@ -167,12 +167,14 @@ def convert_time_zone(tweet_obj):
                     #or after dst is off. Adjust based on Timezone
                     #and DST observance.
                     if userdatetime<dstoff:
-                        if usertz=="Mountain Time (US & Canada)":
-                            temphr=timedelta(hours=keys-edt_offset-1)
+                        if usertz=="Arizona":
+                            temphr=timedelta(hours=keys-edt_offset)
                     if userdatetime>dstoff:
                         if usertz=="Azores" or usertz=="Monrovia" or usertz=="UTC":
                              temphr=timedelta(hours=keys-edt_offset+1)
-
+                        if usertz=="Arizona":
+                            temphr=timedelta(hours=keys-edt_offset+1)
+                            
                     userdatetime-=temphr             
                     break
         #if hour was not modified after loop throw error as timezone was not listed.
