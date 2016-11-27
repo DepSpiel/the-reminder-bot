@@ -11,8 +11,9 @@ API: https://github.com/sixohsix/twitter/tree/master/twitter
 import pymysql
 from twitter import TwitterStream, Twitter, OAuth
 from tweet import create_tweet
-from verifytime import convert_time_zone#, time_check
+from verifytime import convert_time_zone, time_check
 from filter import filter_tweet
+from error import FilterError, TimePassedError
 
 
 # when repo is made public, the keys and tokens will be replaced with placeholders
@@ -56,9 +57,20 @@ for msg in twitter_userstream.user():
         if tweet_obj is None:
             continue
         else:
-            filter_tweet(tweet_obj) # successfully calls error
-            convert_time_zone(tweet_obj) # successfully calls some of the errors
-            #if time_check(tweet_obj):
+            try:
+                if(filter_tweet(tweet_obj) == False):
+                    raise FilterError
+                if(time_check(tweet_obj) == False):
+                    raise TimePassedError
+            except FilterError:
+                print("Profanity in tweet")
+                #Placeholder for insert to log
+                continue
+            except TimePassedError:
+                print("Time has already passed")
+                # Placeholder for insert to log
+                continue
+            convert_time_zone(tweet_obj)
             insert_to_database(tweet_obj)
             print(tweet_obj)
     else:

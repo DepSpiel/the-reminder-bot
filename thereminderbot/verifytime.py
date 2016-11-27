@@ -95,18 +95,20 @@ def time_check(tweet_obj):
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
         if userhr!=12:
-            userhr=12+userhr
+            userhr=12+int(userhr)
     if tweet_obj.period=="AM":
         if userhr==12:
             userhr=0
-      
-    userdatetime=datetime(timeutc.year, tweet_obj.month, tweet_obj.day,
-                 userhr, tweet_obj.minute, 0)
+
+
+    userdatetime = datetime(timeutc.year, int(tweet_obj.month), int(tweet_obj.day), int(userhr),
+                            int(tweet_obj.minute), 0)
+
 
     now=timedelta(days=current_time.day, hours=current_time.hour,
                   minutes=current_time.minute)
-    requested=timedelta(days=tweet_obj.day, hours=userhr,
-                        minutes=tweet_obj.minute)
+    requested=timedelta(days=int(tweet_obj.day), hours=int(userhr),
+                        minutes=int(tweet_obj.minute))
   
     #test if they requested a previous month
     if userdatetime.month<current_time.month:
@@ -130,7 +132,7 @@ def convert_time_zone(tweet_obj):
     
     #check for AM period with hour in PM range
     if userperiod=="AM":
-        if userhr>12:
+        if int(userhr)>12:
             raise CreateTweetError("Hour field can only be 0-12.")
     
     #conversion to 24 hr clock

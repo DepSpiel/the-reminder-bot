@@ -1,5 +1,5 @@
 """
-@author Tyler Lambert
+@author Barnabas Vizy
 Inserts a tweet_obj into the MySQL database.
 To config the database:
     > CREATE TABLE reminders(
@@ -18,14 +18,20 @@ import pymysql
 from twitter import Twitter, OAuth
 from datetime import *
 import time
-from tweet import Tweet
 
-auth = OAuth(  # keys for reminderbot002@gmail.com , secondary test account with same login
-    consumer_key='PfV0xdYWs55kstAO4PHF1kIHt',
-    consumer_secret='wYtyvj7EaHBWftLCR8sfYBJKQISu4PhhWszIuLACo0I4jqBgAi',
-    token='792039779068157952-HxKthF9JlcGtDYEiHfT1bn456tJKNLE',
-    token_secret='Fl24QTmnau3vQB3svxDBnepwTL4ifGHvLJVD52PXKXh99'
+
+auth = OAuth(
+    consumer_key='2CE1E6U7odFK1MFWeCnOPIh5R',
+    consumer_secret='SqqWIvcMGdLbwAqu2oSBzsCr4379aSITLy4AsA9HZyPQxYqCl6',
+    token='796842527487889409-hY298XB4dZGxBLU2blhpCVMz14UPQo8',
+    token_secret='E9CmwGNpDNffxzU7NjuXernjofYSEF6RyjEKiVantXJap'
 )
+# auth = OAuth(  # keys for reminderbot002@gmail.com , secondary test account with same login
+#     consumer_key='PfV0xdYWs55kstAO4PHF1kIHt',
+#     consumer_secret='wYtyvj7EaHBWftLCR8sfYBJKQISu4PhhWszIuLACo0I4jqBgAi',
+#     token='792039779068157952-HxKthF9JlcGtDYEiHfT1bn456tJKNLE',
+#     token_secret='Fl24QTmnau3vQB3svxDBnepwTL4ifGHvLJVD52PXKXh99'
+# )
 
 t = Twitter(auth=auth)
 
@@ -39,16 +45,15 @@ while (1<2):
     print("Checking DB...")
     # for every element in table, do any of the times match
     # if they do, send tweet to user with message
-    prev_string = ''
     for (SENDER, HOUR, MINUTE, PERIOD, TIME_ZONE, MONTH, DAY, MSG, FOLLOWING) in cursor:
 
         tweet_string = "Hey @" + SENDER + ", " + MSG
         timeEST = datetime.now()
         militarytimefix = 0
-        if(PERIOD == "PM"):
-            militarytimefix = 12
+        #if(PERIOD == "PM"):
+        #    militarytimefix = 12
+        #print(timeEST.hour-militarytimefix)
         current_time = datetime(timeEST.year, timeEST.month, timeEST.day, timeEST.hour-militarytimefix, timeEST.minute, 0)
-        #current_time = Tweet(SENDER, HOUR, MINUTE, PERIOD, "Eastern Time (US & Canada)", 10, 15, "Hi", "none")
         print("HOUR:"+str(HOUR)+", MIN: "+str(MINUTE)+", MONTH:"+str(MONTH)+", DAY: "+str(DAY)+", "+str(current_time))
         if MONTH == timeEST.month and DAY == current_time.day and HOUR == current_time.hour and MINUTE == timeEST.minute:
             print("SENDER: {0}, HOUR: {1}, MINUTE: {2}, PERIOD: {3}, TIME_ZONE: {4}, MONTH: {5}, DAY: {6}, MSG: {7}, FOLLOWING: {8}".format(SENDER, HOUR, MINUTE, PERIOD, TIME_ZONE, MONTH, DAY, MSG, FOLLOWING))
