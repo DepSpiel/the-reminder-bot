@@ -89,15 +89,15 @@ def time_check(tweet_obj):
     
     #check for AM period with hour in PM range
     if userperiod=="AM":
-        if userhr>12:
+        if int(userhr)>12:
             raise CreateTweetError("Hour field can only be 0-12.")
     
     #conversion to 24 hr clock
     if tweet_obj.period=="PM":
-        if userhr!=12:
+        if int(userhr)!=12:
             userhr=12+int(userhr)
     if tweet_obj.period=="AM":
-        if userhr==12:
+        if int(userhr)==12:
             userhr=0
 
 

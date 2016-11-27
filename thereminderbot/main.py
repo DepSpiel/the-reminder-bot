@@ -14,6 +14,7 @@ from tweet import create_tweet
 from verifytime import convert_time_zone, time_check
 from filter import filter_tweet
 from error import FilterError, TimePassedError
+from error import update_log
 
 
 # when repo is made public, the keys and tokens will be replaced with placeholders
@@ -65,12 +66,12 @@ for msg in twitter_userstream.user():
             except FilterError:
                 print("Profanity in tweet")
                 #Placeholder for insert to log
+                update_log(tweet_obj.sender, "Bad language - denied")
                 continue
             except TimePassedError:
                 print("Time has already passed")
                 # Placeholder for insert to log
                 continue
-            convert_time_zone(tweet_obj)
             insert_to_database(tweet_obj)
             print(tweet_obj)
     else:

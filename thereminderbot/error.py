@@ -1,3 +1,6 @@
+from time import localtime, strftime
+import datetime
+
 class Error(Exception):
    """Base class for other exceptions"""
    pass
@@ -13,3 +16,11 @@ class CreateTweetError(Error):
 class TimePassedError(Error):
    """Raised when reminder set for a past time"""
    pass
+
+def update_log(user, error):
+    f = open('../website/views/logs.html', 'a')
+    time = strftime("%Y-%m-%d %H:%M:%S", localtime())
+    tmp_str = "<tr><td>{0} </td><td>{1} </td><td>{2}</td></tr><br><br>".format(user, error, time)
+    print(tmp_str)
+    f.write(tmp_str)
+    f.close()
