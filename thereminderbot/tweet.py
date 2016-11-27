@@ -41,8 +41,16 @@ def create_tweet(json_obj):
     period = split_dm_msg[2].replace(" ", "")
     month = split_dm_msg[3].replace(" ", "").split('/')[0].replace(" ", "")
     day = split_dm_msg[3].replace(" ", "").split('/')[1].replace(" ", "")
-    msg = split_dm_msg[4]#.replace(" ", "")
-
+    msg = split_dm_msg[4]
+    try:
+        hour = int(hour)
+        minute = int(minute)
+        month = int(month)
+        day = int(day)
+    except ValueError as e:
+        raise CreateTweetError('Either hour, minute, month, or day is not an integer')
+    except:
+        raise CreateTweetError('General string to integer conversion error in create_tweet')
     # get the Twitter handle of the sender
     sender = json_obj['direct_message']['sender_screen_name']
     if sender is None:
@@ -56,8 +64,9 @@ def create_tweet(json_obj):
         return None
 
     # check to see if sender is following @thereminderbot
-    following = json_obj['direct_message']['recipient']['following'] # might be sender...
-    if following is None: # or is false (add later)
+    following = json_obj['direct_message']['recipient']['following']
+    following.replace(" ", "")
+    if following == "false":
         raise CreateTweetError('The sender is not following or had a value of None')
         return None
 
