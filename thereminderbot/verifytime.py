@@ -77,6 +77,18 @@ raised if day, month or hour are out of range.index If period is set to AM and
 user enters hour>12 CreateTweetError is raised. If time has passed already
 this function returns False, otherwise True is returned."""
 def time_check(tweet_obj):
+
+    if(tweet_obj == None):
+        return False
+    if (tweet_obj.month > 12 or tweet_obj.month < 0 ):
+        return False
+    if (tweet_obj.day > 31 or tweet_obj.day < 0 ):
+        return False
+    if (tweet_obj.hour > 23 or tweet_obj.hour < 0 ):
+        return False
+    if (tweet_obj.minute > 59 or tweet_obj.minute < 0 ):
+        return False
+
     #offset required due to DST
     current_time=datetime(timeutc.year, timeutc.month, timeutc.day,
                           timeutc.hour, timeutc.minute, 0)
@@ -125,6 +137,16 @@ def time_check(tweet_obj):
 format and calculates the difference in their time zone an EDT using a
 timedelta object to handle difference in hours and rollover of day/month/year"""
 def convert_time_zone(tweet_obj):
+
+    if (tweet_obj.month > 12 or tweet_obj.month < 0 ):
+        return None
+    if (tweet_obj.day > 31 or tweet_obj.day < 0 ):
+        return None
+    if (tweet_obj.hour > 23 or tweet_obj.hour < 0 ):
+        return None
+    if (tweet_obj.minute > 59 or tweet_obj.minute < 0 ):
+        return None
+
     edt_offset = -4
     usertz=tweet_obj.time_zone
     userhr=tweet_obj.hour
@@ -142,7 +164,7 @@ def convert_time_zone(tweet_obj):
     if tweet_obj.period=="AM":
         if userhr==12:
             userhr=0
-    
+
     userdatetime=datetime(timeutc.year, int(tweet_obj.month), int(tweet_obj.day), int(userhr),
                  int(tweet_obj.minute), 0)
 
