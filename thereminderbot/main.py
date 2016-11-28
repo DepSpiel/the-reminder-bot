@@ -13,8 +13,7 @@ from twitter import TwitterStream, Twitter, OAuth
 from tweet import create_tweet
 from verifytime import convert_time_zone, time_check
 from filter import filter_tweet
-from error import FilterError, TimePassedError
-from error import update_log
+from error import update_log, FilterError, TimePassedError, CreateTweetError
 
 
 # when repo is made public, the keys and tokens will be replaced with placeholders
@@ -54,25 +53,30 @@ def insert_to_database(tweet_obj):
 
 for msg in twitter_userstream.user():
     if 'direct_message' in msg:
-        tweet_obj = create_tweet(msg)
-        if tweet_obj is None:
+
+        try:
+            tweet_obj = create_tweet(msg)
+            if tweet_obj is None:
+                raise CreateTweetError
+            if(filter_tweet(tweet_obj) == False):
+                raise FilterError
+            if(time_check(tweet_obj) == False):
+                raise TimePassedError
+        except CreateTweetError:
+            print("Could not create tweet_obj")
+            update_log("Console", "Could not create tweet_obj")
             continue
-        else:
-            try:
-                if(filter_tweet(tweet_obj) == False):
-                    raise FilterError
-                if(time_check(tweet_obj) == False):
-                    raise TimePassedError
-            except FilterError:
-                print("Profanity in tweet")
-                #Placeholder for insert to log
-                update_log(tweet_obj.sender, "Bad language - denied")
-                continue
-            except TimePassedError:
-                print("Time has already passed")
-                # Placeholder for insert to log
-                continue
-            insert_to_database(tweet_obj)
-            print(tweet_obj)
+        except FilterError:
+            print("Profanity in tweet")
+            update_log(tweet_obj.sender, "Profanity in tweet")
+            continue
+        except TimePassedError:
+            print("Time has already passed")
+            update_log(tweet_obj.sender, "Time has already passed")
+            continue
+        insert_to_database(tweet_obj)
+        update_log(tweet_obj.sender, "Reminder successfully set")
+        print(tweet_obj)
+
     else:
         print("No new messages.")

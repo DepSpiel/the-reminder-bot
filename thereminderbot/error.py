@@ -1,5 +1,4 @@
 from time import localtime, strftime
-import datetime
 
 class Error(Exception):
    """Base class for other exceptions"""
@@ -18,9 +17,8 @@ class TimePassedError(Error):
    pass
 
 def update_log(user, error):
-    f = open('../website/views/logs.html', 'a')
+    f = open('../website/public/log_input.html', 'a')
     time = strftime("%Y-%m-%d %H:%M:%S", localtime())
-    tmp_str = "<tr><td>{0} </td><td>{1} </td><td>{2}</td></tr><br><br>".format(user, error, time)
-    print(tmp_str)
+    tmp_str = "<tr><td>{0} </td><td>{1} </td><td>{2}</td></tr>".format(user, error, time)
     f.write(tmp_str)
     f.close()

@@ -23,8 +23,8 @@ class Tweet:
         self.following = following		# boolean value determining if user is a follower
 
     def __repr__(self):
-        return self.sender + ' ' + self.hour + ' ' + self.minute + ' ' + self.period + ' ' +\
-               self.time_zone + ' ' + self.month + ' ' + self.day + ' ' + self.msg
+        return str(self.sender) + ' ' + str(self.hour) + ' ' + str(self.minute) + ' ' + str(self.period) + ' ' + \
+               str(self.time_zone) + ' ' + str(self.month) + ' ' + str(self.day) + ' ' + str(self.msg)
 
 
 def create_tweet(json_obj):
@@ -33,7 +33,8 @@ def create_tweet(json_obj):
     dm_msg = json_obj['direct_message']['text']
     split_dm_msg = dm_msg.split(':', 4)
     if len(split_dm_msg) != 5:
-        raise CreateTweetError('split_dm_msg is not size of 5')
+        #raise CreateTweetError('split_dm_msg is not size of 5')
+        return None
 
     # set variables from the split text field of the DM
     hour = split_dm_msg[0].replace(" ", "")
@@ -48,26 +49,30 @@ def create_tweet(json_obj):
         month = int(month)
         day = int(day)
     except ValueError as e:
-        raise CreateTweetError('Either hour, minute, month, or day is not an integer')
+        #raise CreateTweetError('Either hour, minute, month, or day is not an integer')
+        return None
     except:
-        raise CreateTweetError('General string to integer conversion error in create_tweet')
+        #raise CreateTweetError('General string to integer conversion error in create_tweet')
+        return None
+
+
     # get the Twitter handle of the sender
     sender = json_obj['direct_message']['sender_screen_name']
     if sender is None:
-        raise CreateTweetError('Sender had a value of None')
+        #raise CreateTweetError('Sender had a value of None')
         return None
 
     # get the sender's time zone
     time_zone = json_obj['direct_message']['sender']['time_zone']
     if time_zone is None:
-        raise CreateTweetError('Time zone had a value of None')
+        #raise CreateTweetError('Time zone had a value of None')
         return None
 
     # check to see if sender is following @thereminderbot
     following = json_obj['direct_message']['recipient']['following']
-    following.replace(" ", "")
+    #following.replace(" ", "")
     if following == "false":
-        raise CreateTweetError('The sender is not following or had a value of None')
+        #raise CreateTweetError('The sender is not following or had a value of None')
         return None
 
     # create the Tweet object and return

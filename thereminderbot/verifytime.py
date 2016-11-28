@@ -80,7 +80,7 @@ def time_check(tweet_obj):
     #offset required due to DST
     current_time=datetime(timeutc.year, timeutc.month, timeutc.day,
                           timeutc.hour, timeutc.minute, 0)
-    current_time-=timedelta(hours=4)
+    current_time-=timedelta(hours=5)
 
     #convert to EDT for comparison
     convert_time_zone(tweet_obj)
