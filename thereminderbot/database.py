@@ -19,6 +19,7 @@ from twitter import Twitter, OAuth
 from datetime import *
 import time
 from error import update_log
+from random import randint
 
 
 # auth = OAuth(
@@ -48,7 +49,7 @@ while (1<2):
     # if they do, send tweet to user with message
     for (SENDER, HOUR, MINUTE, PERIOD, TIME_ZONE, MONTH, DAY, MSG, FOLLOWING) in cursor:
 
-        tweet_string = "Hey @" + SENDER + ", " + MSG
+        tweet_string = "Hey @" + SENDER + " - " + MSG + " - " + str(randint(1000, 9999))
         timeEST = datetime.now()
 
         militarytimefix = 0
