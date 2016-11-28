@@ -6,7 +6,6 @@ required fields to make a Tweet object. The Tweet object is created and
 passed to every function after create_tweet completes.
 """
 
-from error import CreateTweetError
 
 
 class Tweet:
@@ -33,7 +32,7 @@ def create_tweet(json_obj):
     dm_msg = json_obj['direct_message']['text']
     split_dm_msg = dm_msg.split(':', 4)
     if len(split_dm_msg) != 5:
-        #raise CreateTweetError('split_dm_msg is not size of 5')
+
         return None
 
     # set variables from the split text field of the DM

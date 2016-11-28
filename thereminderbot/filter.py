@@ -4,8 +4,6 @@ This is the filter function for TRB - ensuring that tweets don't contain profani
 Trigger Warning: This file contains a list, forbidden_Words, of common profanity. If you are easily offended, do not view this list.
 """
 
-from error import FilterError
-
 def filter_tweet(tweet_obj):
     #Procedure:
         #1. Extract message string from the tweet_obj Python Object.
@@ -22,10 +20,8 @@ def filter_tweet(tweet_obj):
                         'dildo', 'dike', 'douche', 'fag', 'hoe', 'honkey', 'muff', 'queer', 'rimjob', 'slut', 'whore']    #This is the list that will be the basis for comparison against the tweeted message.
     for i in forbidden_words:    #Iterate through the list, testing each word for presence within the tweet. If a match is found, raise an exception. Else, return.
         if i in string_to_test:    #if the message contains a forbidden word:
-            #raise FilterError('This tweet contains incendiery language or profanity')
             return False
-        else:
-            return True    #Nothing is found, so return
-    return    #Exit
+
+    return True  # Nothing is found, so return true
     
     #References: http://www.noswearing.com/, and the Python 3.5.2 Documentation
