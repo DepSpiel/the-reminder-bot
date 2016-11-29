@@ -6,7 +6,7 @@ required fields to make a Tweet object. The Tweet object is created and
 passed to every function after create_tweet completes.
 """
 
-
+from error import update_log
 
 class Tweet:
 
@@ -32,7 +32,8 @@ def create_tweet(json_obj):
     dm_msg = json_obj['direct_message']['text']
     split_dm_msg = dm_msg.split(':', 4)
     if len(split_dm_msg) != 5:
-
+        update_log("Console", "Too many input fields (':')")
+        print("0\n")
         return None
 
     # set variables from the split text field of the DM
@@ -48,30 +49,34 @@ def create_tweet(json_obj):
         month = int(month)
         day = int(day)
     except ValueError as e:
-        #raise CreateTweetError('Either hour, minute, month, or day is not an integer')
+        update_log("Console", "Value error in tweet obj")
+        print("Value Error\n")
         return None
     except:
-        #raise CreateTweetError('General string to integer conversion error in create_tweet')
+        update_log("Console", "Misc input error in tweet obj")
+        print("Misc Input\n")
         return None
 
 
     # get the Twitter handle of the sender
     sender = json_obj['direct_message']['sender_screen_name']
     if sender is None:
-        #raise CreateTweetError('Sender had a value of None')
+        update_log("Console", "Sender handle returned as null")
+        print("Sender handle null\n")
         return None
 
     # get the sender's time zone
     time_zone = json_obj['direct_message']['sender']['time_zone']
     if time_zone is None:
-        #raise CreateTweetError('Time zone had a value of None')
+        update_log("Console", "User timezone not configured")
+        print("User timezone not configured\n")
         return None
 
     # check to see if sender is following @thereminderbot
     following = json_obj['direct_message']['recipient']['following']
-    #following.replace(" ", "")
     if following == "false":
-        #raise CreateTweetError('The sender is not following or had a value of None')
+        update_log("Console", "Sender not following")
+        print("Sender not following\n")
         return None
 
     # create the Tweet object and return

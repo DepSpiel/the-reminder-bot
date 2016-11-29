@@ -17,18 +17,18 @@ from error import update_log, FilterError, TimePassedError, CreateTweetError
 
 
 # when repo is made public, the keys and tokens will be replaced with placeholders
-# auth = OAuth(
-#     consumer_key='2CE1E6U7odFK1MFWeCnOPIh5R',
-#     consumer_secret='SqqWIvcMGdLbwAqu2oSBzsCr4379aSITLy4AsA9HZyPQxYqCl6',
-#     token='796842527487889409-hY298XB4dZGxBLU2blhpCVMz14UPQo8',
-#     token_secret='E9CmwGNpDNffxzU7NjuXernjofYSEF6RyjEKiVantXJap'
-# )
-auth = OAuth(  # keys for reminderbot002@gmail.com , secondary test account with same login
-    consumer_key='PfV0xdYWs55kstAO4PHF1kIHt',
-    consumer_secret='wYtyvj7EaHBWftLCR8sfYBJKQISu4PhhWszIuLACo0I4jqBgAi',
-    token='792039779068157952-HxKthF9JlcGtDYEiHfT1bn456tJKNLE',
-    token_secret='Fl24QTmnau3vQB3svxDBnepwTL4ifGHvLJVD52PXKXh99'
+auth = OAuth(
+    consumer_key='2CE1E6U7odFK1MFWeCnOPIh5R',
+    consumer_secret='SqqWIvcMGdLbwAqu2oSBzsCr4379aSITLy4AsA9HZyPQxYqCl6',
+    token='796842527487889409-hY298XB4dZGxBLU2blhpCVMz14UPQo8',
+    token_secret='E9CmwGNpDNffxzU7NjuXernjofYSEF6RyjEKiVantXJap'
 )
+# auth = OAuth(  # keys for reminderbot002@gmail.com , secondary test account with same login
+#     consumer_key='PfV0xdYWs55kstAO4PHF1kIHt',
+#     consumer_secret='wYtyvj7EaHBWftLCR8sfYBJKQISu4PhhWszIuLACo0I4jqBgAi',
+#     token='792039779068157952-HxKthF9JlcGtDYEiHfT1bn456tJKNLE',
+#     token_secret='Fl24QTmnau3vQB3svxDBnepwTL4ifGHvLJVD52PXKXh99'
+# )
 
 t = Twitter(auth=auth)
 
@@ -72,7 +72,7 @@ for msg in twitter_userstream.user():
             continue
         except TimePassedError:
             print("Time has already passed")
-            update_log(tweet_obj.sender, "Time has already passed")
+            update_log(tweet_obj.sender, "Error with Time formatting")
             continue
         insert_to_database(tweet_obj)
         update_log(tweet_obj.sender, "Reminder successfully set")
