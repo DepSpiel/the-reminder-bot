@@ -2,12 +2,11 @@
 #@author BW Babcock
 #@This file constitutes a few tests for the filter.py file.
 #***
-
 import unittest #import Python's unittest package.
 import sys
-sys.path.insert(0, '/home/ubuntu/thereminderbot/thereminderbot')
+sys.path.insert(0, '/home/ubuntu/thereminderbot/thereminderbot') #'/home/ubuntu/thereminderbot/thereminderbot'
 from tweet import Tweet #import the class meant to create the tweets for testing.
-from filter import FilterError #import my filter file (the file being tested)
+from error import FilterError #import my filter file (the file being tested)
 
 class ErrorTest(unittest.TestCase):
 	#Each function indicates a test case for the filter.py file.

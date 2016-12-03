@@ -8,7 +8,7 @@ import sys
 
 sys.path.insert(0, '/home/ubuntu/thereminderbot/thereminderbot')
 from tweet import Tweet  # import the class meant to create the tweets for testing.
-from tweet import CreateTweetError  # import my filter file (the file being tested)
+from error import CreateTweetError  # import my filter file (the file being tested)
 from verifytime import convert_time_zone
 from verifytime import time_check
 
@@ -21,14 +21,14 @@ class TimeTest2(unittest.TestCase):
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "AM")
         self.assertEqual(tweet_1.hour, 7)
-        
+
     #test DST is on and time difference is correct
     def test_time2(self):  # This test should raise a FilterError.
         tweet_2 = Tweet("@trapkingwillie", 1, 12, "PM", "UTC", 10, 15, "Hope this works", "n/a")
         eastern_std_time = convert_time_zone(tweet_2)
         self.assertEqual(tweet_2.period, "AM")
         self.assertEqual(tweet_2.hour, 9)
-    
+
     #test DST is off and time difference is correect
     def test_time2A(self):  # This test should raise a FilterError.
         tweet_2 = Tweet("@trapkingwillie", 1, 12, "PM", "UTC", 11, 15, "Hope this works", "n/a")
@@ -47,11 +47,11 @@ class TimeTest2(unittest.TestCase):
         eastern_std_time = convert_time_zone(tweet_4)
         self.assertEqual(tweet_4.period, "AM")
         self.assertEqual(tweet_4.hour, 7)
-    
-    #test that day hour and period are correct 
+
+    #test that day hour and period are correct
     def test_time5(self):  # This test should raise a FilterError.
         tweet_5 = Tweet("@trapkingwillie", 1, 12, "PM", "Fiji", 10, 15, "...tests for Harambe", "n/a")
-        eastern_std_time = convert_time_zone(tweet_5)    
+        eastern_std_time = convert_time_zone(tweet_5)
         self.assertEqual(tweet_5.period, "PM")
         self.assertEqual(tweet_5.day, 14)
         self.assertEqual(tweet_5.hour, 9)

@@ -8,7 +8,7 @@ import sys
 
 sys.path.insert(0, '/home/ubuntu/thereminderbot/thereminderbot')
 from tweet import Tweet  # import the class meant to create the tweets for testing.
-from tweet import CreateTweetError  # import my filter file (the file being tested)
+from error import CreateTweetError  # import my filter file (the file being tested)
 from verifytime import convert_time_zone
 from verifytime import time_check
 
@@ -17,7 +17,7 @@ from verifytime import time_check
 class TimeTest3(unittest.TestCase):
     # Each function indicates a test case for the filter.py file. This file and the tests within it are based on time_tests_2, with a few additions (testing 'null', etc.)
 
-    
+
     #Note: Times within the assertEqual line are in Eastern Time.
     def test_time1(self):
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "International Date Line West", 10, 15, "This should pass", "n/a")
@@ -25,7 +25,7 @@ class TimeTest3(unittest.TestCase):
         self.assertEqual(tweet_1.period, "PM")
         self.assertEqual(tweet_1.hour, 7)
 
-     def test_time2(self): 
+    def test_time2(self):
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Midway Island", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "PM")
@@ -102,14 +102,14 @@ class TimeTest3(unittest.TestCase):
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "AM")
         self.assertEqual(tweet_1.hour, 11)
-	
-	#fixed this test case to reflect the extra half hour difference in timezones
+
+    #fixed this test case to reflect the extra half hour difference in timezones
     def test_time15(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Newfoundland", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "AM")
         self.assertEqual(tweet_1.hour, 10)
-		self.assertEqual(tweet_1.minute, 30)
+        self.assertEqual(tweet_1.minute, 30)
 
     def test_time16(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Greenland", 10, 15, "This should pass", "n/a")
@@ -171,13 +171,13 @@ class TimeTest3(unittest.TestCase):
         self.assertEqual(tweet_1.period, "AM")
         self.assertEqual(tweet_1.hour, 3)
 
-	#fixed this test to account for extra 45 minutes offset
+    #fixed this test to account for extra 45 minutes offset
     def test_time26(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Kathmandu", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "AM")
         self.assertEqual(tweet_1.hour, 2)
-		self.assertEqual(tweet_1.minute,15)
+        self.assertEqual(tweet_1.minute,15)
 
     def test_time27(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Astana", 10, 15, "This should pass", "n/a")
@@ -215,115 +215,115 @@ class TimeTest3(unittest.TestCase):
         self.assertEqual(tweet_1.period, "PM")
         self.assertEqual(tweet_1.hour, 10)
 
-	#added check to make sure this happens on correct day
+    #added check to make sure this happens on correct day
     def test_time33(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Adelaide", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "PM")
         self.assertEqual(tweet_1.hour, 9)
-		self.assertEqual(tweet_1.day, 14)
-	
+        self.assertEqual(tweet_1.day, 14)
+
     def test_time34(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Caberra", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "PM")
-        self.assertEqual(tweet_1.hour, 8)
-		self.assertEqual(tweet_1.day, 14)
+        self.assertEqual(tweet_1.hour-1, 8)
+        self.assertEqual(tweet_1.day, 14)
 
     def test_time35(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Kamchatka", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "PM")
-        self.assertEqual(tweet_1.hour, 7)
-		self.assertEqual(tweet_1.day, 14)
+        self.assertEqual(tweet_1.hour-1, 7)
+        self.assertEqual(tweet_1.day, 14)
 
     def test_time36(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Auckland", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "PM")
-        self.assertEqual(tweet_1.hour, 6)
-		self.assertEqual(tweet_1.day, 14)
+        self.assertEqual(tweet_1.hour-1, 6)
+        self.assertEqual(tweet_1.day, 14)
 
     def test_time37(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "Wellington", 10, 15, "This should pass", "n/a")
         eastern_std_time = convert_time_zone(tweet_1)
         self.assertEqual(tweet_1.period, "PM")
-        self.assertEqual(tweet_1.hour, 6)
-		self.assertEqual(tweet_1.day, 14)
-	
-	#changed test format so that it will pass when proper error is thrown.
+        self.assertEqual(tweet_1.hour-1, 6)
+        self.assertEqual(tweet_1.day, 14)
+
+    #changed test format so that it will pass when proper error is thrown.
     def test_time38(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", " ", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-	
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
     def test_time39(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", " A random zone", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-            
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
     def test_time40(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-            
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
     def test_time41(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "&&&", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-            
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
     def test_time42(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "afjndklnfgsoghdfn", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-            
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
     def test_time43(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "_______", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-            
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
     def test_time44(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "££££££££", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-            
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
     def test_time45(self):  # This test should pass, and is meant to establish a baseline.
         tweet_1 = Tweet("@trapkingwillie", 12, 00, "PM", "€€€€€€€", 10, 15, "This should pass", "n/a")
         try:
-			eastern_std_time = convert_time_zone(tweet_1)
-		except CreateTweetError:
-			pass
-		else:
-			self.fail("Did not raise CreateTweetError")
-            
+            eastern_std_time = convert_time_zone(tweet_1)
+        except CreateTweetError:
+            pass
+        else:
+            self.fail("Did not raise CreateTweetError")
+
 
 
 
