@@ -6,25 +6,25 @@
 import unittest  # import Python's unittest package.
 import sys
 
-sys.path.insert(0, '/home/ubuntu/thereminderbot/thereminderbot')
-from tweet import Tweet  # import the class meant to create the tweets for testing.
-from tweet import CreateTweetError  # import my filter file (the file being tested)
+sys.path.insert(0, 'C:\\Users\\Tyler\Dropbox\\thereminderbot\\thereminderbot')# '/home/ubuntu/thereminderbot/thereminderbot')
+from tweet import create_tweet  # import the class meant to create the tweets for testing.
+from error import CreateTweetError  # import my filter file (the file being tested)
 from verifytime import convert_time_zone
 from verifytime import time_check
-import json 
+import json
 
 
 class TweetTest(unittest.TestCase):
-    # Each function indicates a test case for the tweet.py file. 
+    # Each function indicates a test case for the tweet.py file.
 
     def test_tweet1(self):
         test_obj = json.loads('{"direct_message" : {"text" : "8:45 : AM : 12/26 : Wake up!", "sender_screen_name" : "myTwitterHandle", "sender" : {"time_zone" : "Atlantic Time (Canada)"}, "recipient" : { "following" : "true"}}}')
         tested_Tweet = create_tweet(test_obj)
-        self.assertEqual(tested_Tweet.hour, "8")
-        self.assertEqual(tested_Tweet.minute, "45")
+        self.assertEqual(tested_Tweet.hour, 8)
+        self.assertEqual(tested_Tweet.minute, 45)
         self.assertEqual(tested_Tweet.period, "AM")
-        self.assertEqual(tested_Tweet.month, "12")
-        self.assertEqual(tested_Tweet.day, "26")
+        self.assertEqual(tested_Tweet.month, 12)
+        self.assertEqual(tested_Tweet.day, 26)
         self.assertEqual(tested_Tweet.msg, " Wake up!")
 
 
@@ -117,7 +117,7 @@ class TweetTest(unittest.TestCase):
         test_obj = json.loads('{"direct_message" : {"text" : "8_  :  45_ : AM_ : 12  /  _26 : Wake up!", "sender_screen_name" : "myTwitterHandle", "sender" : {"time_zone" : "Atlantic Time (Canada)"}, "recipient" : { "following" : "true"}}}')
         tested_Tweet = create_tweet(test_obj)
         self.assertRaises(CreateTweetError)
-  
+
 
 
 

@@ -37,12 +37,17 @@ def create_tweet(json_obj):
         return None
 
     # set variables from the split text field of the DM
-    hour = split_dm_msg[0].replace(" ", "")
-    minute = split_dm_msg[1].replace(" ", "")
-    period = split_dm_msg[2].replace(" ", "")
-    month = split_dm_msg[3].replace(" ", "").split('/')[0].replace(" ", "")
-    day = split_dm_msg[3].replace(" ", "").split('/')[1].replace(" ", "")
-    msg = split_dm_msg[4]
+    try:
+        hour = split_dm_msg[0].replace(" ", "")
+        minute = split_dm_msg[1].replace(" ", "")
+        period = split_dm_msg[2].replace(" ", "")
+        month = split_dm_msg[3].replace(" ", "").split('/')[0].replace(" ", "")
+        day = split_dm_msg[3].replace(" ", "").split('/')[1].replace(" ", "")
+        msg = split_dm_msg[4]
+    except IndexError as e:
+        update_log("Console", "Not enough fields entered")
+        print("Index Error\n")
+        return None
     try:
         hour = int(hour)
         minute = int(minute)
