@@ -6,7 +6,7 @@
 import unittest  # import Python's unittest package.
 import sys
 
-sys.path.insert(0, 'C:\\Users\\Tyler\Dropbox\\thereminderbot\\thereminderbot')# '/home/ubuntu/thereminderbot/thereminderbot')
+sys.path.insert(0, '/home/ubuntu/thereminderbot/thereminderbot')
 from tweet import create_tweet  # import the class meant to create the tweets for testing.
 from error import CreateTweetError  # import my filter file (the file being tested)
 from verifytime import convert_time_zone
